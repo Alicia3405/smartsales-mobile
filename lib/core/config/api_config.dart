@@ -2,7 +2,7 @@ class ApiConfig {
   // IMPORTANTE: Cambia esta URL por la IP de tu servidor backend
   // Si estás usando un emulador de Android, usa 10.0.2.2 en lugar de localhost
   // Si estás usando un dispositivo físico, usa la IP de tu computadora en la red local
-  static const String baseUrl = 'http://34.38.132.155:8000';
+  static const String baseUrl = 'http://localhost:3000';
   
   // Endpoints de autenticación
   static const String login = '/api/v1/token/';

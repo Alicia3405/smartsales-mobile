@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=D:\Programas\flutter"
-export "FLUTTER_APPLICATION_PATH=D:\Proyectos\ayuda\smartsales-mobile"
+export "FLUTTER_ROOT=C:\Users\migue\Desktop\android studio\flutter_windows_3.35.3-stable\flutter"
+export "FLUTTER_APPLICATION_PATH=C:\Users\migue\Desktop\examensi2\nueva-version\smartsales-mobile"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib\main.dart"
 export "FLUTTER_BUILD_DIR=build"

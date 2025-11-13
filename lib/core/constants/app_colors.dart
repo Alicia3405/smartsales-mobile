@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Colores primarios
-  static const Color primary = Color(0xFF2196F3);
-  static const Color primaryDark = Color(0xFF1976D2);
-  static const Color primaryLight = Color(0xFF64B5F6);
+  // Colores primarios - SmartSales Theme
+  static const Color primary = Color(0xFF00BCD4);
+  static const Color primaryDark = Color(0xFF0097A7);
+  static const Color primaryLight = Color(0xFF4DD0E1);
   
   // Colores secundarios
   static const Color secondary = Color(0xFFFF9800);
