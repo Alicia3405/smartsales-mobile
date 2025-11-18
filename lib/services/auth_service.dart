@@ -9,7 +9,7 @@ class AuthService {
       final response = await ApiService.post(
         ApiConfig.login,
         {
-          'email': email,
+          'username': email,  // JWT usa username, no email
           'password': password,
         },
         requiresAuth: false,
@@ -35,16 +35,21 @@ class AuthService {
     String? phone,
   }) async {
     try {
+      final data = {
+        'username': email,  // Usar email como username
+        'email': email,
+        'password': password,
+        'first_name': firstName,
+        'last_name': lastName,
+        if (phone != null) 'phone': phone,
+        'role': 'CLIENT',  // Rol correcto en mayúsculas
+      };
+      
+      print('🔍 Datos enviados desde móvil: $data');
+      
       final response = await ApiService.post(
         ApiConfig.register,
-        {
-          'email': email,
-          'password': password,
-          'first_name': firstName,
-          'last_name': lastName,
-          if (phone != null) 'phone': phone,
-          'role': 'cliente',
-        },
+        data,
         requiresAuth: false,
       );
       

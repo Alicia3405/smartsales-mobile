@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
 import '../services/api_service.dart';
+// import '../services/notification_service.dart';
 
 class AuthProvider with ChangeNotifier {
   User? _user;
@@ -21,7 +22,7 @@ class AuthProvider with ChangeNotifier {
     try {
       await ApiService.loadTokens();
       
-      if (AuthService.isAuthenticated) {
+      if (ApiService.isAuthenticated) {
         _user = await AuthService.getProfile();
       }
     } catch (e) {
@@ -40,10 +41,13 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
     
     try {
-      final response = await AuthService.login(email, password);
+      await AuthService.login(email, password);
       
       // Get user profile
       _user = await AuthService.getProfile();
+      
+      // TODO: Enviar token FCM al backend después del login
+      // await NotificationService.initialize();
       
       _isLoading = false;
       notifyListeners();
@@ -77,12 +81,10 @@ class AuthProvider with ChangeNotifier {
         phone: phone,
       );
       
-      // Auto login after registration
-      final loginSuccess = await login(email, password);
-      
+      // Registration successful, return true without auto-login
       _isLoading = false;
       notifyListeners();
-      return loginSuccess;
+      return true;
     } catch (e) {
       _error = e.toString();
       _isLoading = false;
@@ -94,6 +96,10 @@ class AuthProvider with ChangeNotifier {
   // Logout
   Future<void> logout() async {
     await AuthService.logout();
+    
+    // TODO: Limpiar token FCM
+    // await NotificationService.clearToken();
+    
     _user = null;
     _error = null;
     notifyListeners();

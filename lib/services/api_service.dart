@@ -50,6 +50,9 @@ class ApiService {
   // Verificar si está autenticado
   static bool get isAuthenticated => _accessToken != null;
   
+  // Getter para refresh token (para evitar warning unused_field)
+  static String? get refreshToken => _refreshToken;
+  
   // GET request
   static Future<Map<String, dynamic>> get(
     String endpoint, {
@@ -141,13 +144,39 @@ class ApiService {
       }
       return jsonDecode(response.body);
     } else {
-      final error = response.body.isNotEmpty
-          ? jsonDecode(response.body)
-          : {'error': 'Error desconocido'};
-      throw ApiException(
-        error['error']?.toString() ?? error['detail']?.toString() ?? 'Error en la petición',
-        response.statusCode,
-      );
+      String errorMessage = 'Error en la petición';
+      
+      try {
+        final error = jsonDecode(response.body);
+        
+        // Manejar diferentes formatos de error de Django
+        if (error is Map) {
+          if (error.containsKey('non_field_errors')) {
+            errorMessage = error['non_field_errors'][0];
+          } else if (error.containsKey('detail')) {
+            errorMessage = error['detail'];
+          } else if (error.containsKey('error')) {
+            errorMessage = error['error'];
+          } else {
+            // Manejar errores de campo específicos
+            final fieldErrors = <String>[];
+            error.forEach((key, value) {
+              if (value is List && value.isNotEmpty) {
+                fieldErrors.add('$key: ${value[0]}');
+              } else if (value is String) {
+                fieldErrors.add('$key: $value');
+              }
+            });
+            if (fieldErrors.isNotEmpty) {
+              errorMessage = fieldErrors.join(', ');
+            }
+          }
+        }
+      } catch (e) {
+        errorMessage = 'Error ${response.statusCode}: ${response.body}';
+      }
+      
+      throw ApiException(errorMessage, response.statusCode);
     }
   }
   

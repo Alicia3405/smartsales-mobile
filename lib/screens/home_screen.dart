@@ -8,14 +8,14 @@ import '../widgets/product_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-  
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   final _searchController = TextEditingController();
-  
+
   @override
   void initState() {
     super.initState();
@@ -23,30 +23,30 @@ class _HomeScreenState extends State<HomeScreen> {
       _loadData();
     });
   }
-  
+
   Future<void> _loadData() async {
     final productProvider = context.read<ProductProvider>();
     final cartProvider = context.read<CartProvider>();
-    
+
     await Future.wait([
       productProvider.loadProducts(),
       productProvider.loadCategories(),
       cartProvider.loadCart(),
     ]);
   }
-  
+
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     final productProvider = context.watch<ProductProvider>();
     final cartProvider = context.watch<CartProvider>();
-    
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -95,11 +95,12 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: const Icon(Icons.account_circle),
             itemBuilder: (context) => <PopupMenuEntry>[
               PopupMenuItem(
-                child: Text('Hola, ${authProvider.user?.firstName ?? "Usuario"}'),
                 enabled: false,
+                child:
+                    Text('Hola, ${authProvider.user?.firstName ?? "Usuario"}'),
               ),
               const PopupMenuDivider(),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 'profile',
                 child: Row(
                   children: [
@@ -109,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 'orders',
                 child: Row(
                   children: [
@@ -120,13 +121,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const PopupMenuDivider(),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 'logout',
                 child: Row(
                   children: [
                     Icon(Icons.logout, size: 20, color: AppColors.error),
                     SizedBox(width: 8),
-                    Text('Cerrar Sesión', style: TextStyle(color: AppColors.error)),
+                    Text('Cerrar Sesión',
+                        style: TextStyle(color: AppColors.error)),
                   ],
                 ),
               ),
@@ -135,12 +137,19 @@ class _HomeScreenState extends State<HomeScreen> {
               if (value == 'logout') {
                 await authProvider.logout();
                 if (mounted) {
+                  // ignore: use_build_context_synchronously
                   Navigator.of(context).pushReplacementNamed('/login');
                 }
               } else if (value == 'profile') {
-                Navigator.of(context).pushNamed('/profile');
+                if (mounted) {
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pushNamed('/profile');
+                }
               } else if (value == 'orders') {
-                Navigator.of(context).pushNamed('/orders');
+                if (mounted) {
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pushNamed('/orders');
+                }
               }
             },
           ),
@@ -179,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            
+
             // Categories
             if (productProvider.categories.isNotEmpty)
               Container(
@@ -204,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-            
+
             // Products grid
             Expanded(
               child: productProvider.isLoading
@@ -218,7 +227,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       : GridView.builder(
                           padding: const EdgeInsets.all(16),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             childAspectRatio: 0.7,
                             crossAxisSpacing: 16,
@@ -226,15 +236,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           itemCount: productProvider.filteredProducts.length,
                           itemBuilder: (context, index) {
-                            final product = productProvider.filteredProducts[index];
+                            final product =
+                                productProvider.filteredProducts[index];
                             return ProductCard(
                               product: product,
                               onTap: () {
                                 // TODO: Navigate to product detail
                               },
                               onAddToCart: () async {
-                                final success = await cartProvider.addToCart(product.id, 1);
+                                final success =
+                                    await cartProvider.addToCart(product.id, 1);
                                 if (mounted) {
+                                  // ignore: use_build_context_synchronously
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
@@ -242,7 +255,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ? 'Producto agregado al carrito'
                                             : 'Error al agregar al carrito',
                                       ),
-                                      backgroundColor: success ? AppColors.success : AppColors.error,
+                                      backgroundColor: success
+                                          ? AppColors.success
+                                          : AppColors.error,
                                     ),
                                   );
                                 }
@@ -256,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-  
+
   Widget _buildCategoryChip(String label, bool isSelected, VoidCallback onTap) {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
@@ -265,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
         selected: isSelected,
         onSelected: (_) => onTap(),
         backgroundColor: Colors.white,
-        selectedColor: AppColors.primary.withOpacity(0.2),
+        selectedColor: AppColors.primary.withValues(alpha: 0.2),
         checkmarkColor: AppColors.primary,
         labelStyle: TextStyle(
           color: isSelected ? AppColors.primary : AppColors.textSecondary,

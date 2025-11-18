@@ -47,7 +47,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!mounted) return;
     
     if (success) {
-      Navigator.of(context).pushReplacementNamed('/home');
+      // Show success message and redirect to login
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.of(context).pop(); // Go back to login screen
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

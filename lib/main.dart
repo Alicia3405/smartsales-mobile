@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'core/constants/app_colors.dart';
 import 'providers/auth_provider.dart';
 import 'providers/product_provider.dart';
@@ -9,8 +10,20 @@ import 'screens/register_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/cart_screen.dart';
 import 'screens/orders_screen.dart';
+// import 'services/notification_service.dart';
+// import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // TODO: Habilitar cuando Firebase esté completamente configurado
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+  
+  // TODO: Habilitar cuando Firebase esté listo
+  // await NotificationService.initialize();
+  
   runApp(const MyApp());
 }
 
@@ -47,7 +60,6 @@ class MyApp extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
           ),
-
           inputDecorationTheme: InputDecorationTheme(
             filled: true,
             fillColor: Colors.white,
@@ -100,19 +112,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: AppColors.primary,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.shopping_bag,
               size: 100,
               color: Colors.white,
             ),
-            const SizedBox(height: 24),
-            const Text(
+            SizedBox(height: 24),
+            Text(
               'SmartSales',
               style: TextStyle(
                 fontSize: 32,
@@ -120,8 +132,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 color: Colors.white,
               ),
             ),
-            const SizedBox(height: 48),
-            const CircularProgressIndicator(
+            SizedBox(height: 48),
+            CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
           ],

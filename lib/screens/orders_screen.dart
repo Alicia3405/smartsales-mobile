@@ -7,7 +7,7 @@ import '../services/order_service.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
-  
+
   @override
   State<OrdersScreen> createState() => _OrdersScreenState();
 }
@@ -16,19 +16,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
   List<Order> _orders = [];
   bool _isLoading = true;
   String? _error;
-  
+
   @override
   void initState() {
     super.initState();
     _loadOrders();
   }
-  
+
   Future<void> _loadOrders() async {
     setState(() {
       _isLoading = true;
       _error = null;
     });
-    
+
     try {
       final orders = await OrderService.getOrders();
       setState(() {
@@ -42,11 +42,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
       });
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    final currencyFormat = NumberFormat.currency(symbol: '\$', decimalDigits: 2);
-    
+    final currencyFormat =
+        NumberFormat.currency(symbol: '\$', decimalDigits: 2);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -69,9 +70,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           color: AppColors.error,
                         ),
                         const SizedBox(height: 16),
-                        Text(
+                        const Text(
                           'Error al cargar pedidos',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             color: AppColors.textSecondary,
                           ),
@@ -142,7 +143,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   children: [
                                     // Header
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           'Pedido #${order.id}',
@@ -155,16 +157,17 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       ],
                                     ),
                                     const SizedBox(height: 8),
-                                    
+
                                     // Date
                                     Text(
-                                      DateFormat('dd/MM/yyyy HH:mm').format(order.createdAt),
+                                      DateFormat('dd/MM/yyyy HH:mm')
+                                          .format(order.createdAt),
                                       style: const TextStyle(
                                         color: AppColors.textSecondary,
                                       ),
                                     ),
                                     const SizedBox(height: 8),
-                                    
+
                                     // Items summary
                                     Text(
                                       '${order.totalItems} ${order.totalItems == 1 ? 'artículo' : 'artículos'}',
@@ -173,10 +176,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       ),
                                     ),
                                     const SizedBox(height: 8),
-                                    
+
                                     // Total
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         const Text(
                                           'Total:',
@@ -205,11 +209,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
       ),
     );
   }
-  
+
   Widget _buildStatusBadge(String status) {
     Color backgroundColor;
     Color textColor = Colors.white;
-    
+
     switch (status) {
       case 'PENDING':
         backgroundColor = AppColors.warning;
@@ -229,7 +233,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       default:
         backgroundColor = Colors.grey;
     }
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -246,7 +250,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
       ),
     );
   }
-  
+
   String _getStatusText(String status) {
     switch (status) {
       case 'PENDING':
@@ -263,10 +267,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
         return status;
     }
   }
-  
+
   void _showOrderDetails(BuildContext context, Order order) {
-    final currencyFormat = NumberFormat.currency(symbol: '\$', decimalDigits: 2);
-    
+    final currencyFormat =
+        NumberFormat.currency(symbol: '\$', decimalDigits: 2);
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -295,7 +300,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               // Header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -311,7 +316,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ],
               ),
               const SizedBox(height: 8),
-              
+
               Text(
                 DateFormat('dd/MM/yyyy HH:mm').format(order.createdAt),
                 style: const TextStyle(
@@ -319,7 +324,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               // Items
               const Text(
                 'Artículos:',
@@ -329,7 +334,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              
+
               Expanded(
                 child: ListView.builder(
                   controller: scrollController,
@@ -354,14 +359,16 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   ? Image.network(
                                       item.productImage!,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return const Icon(Icons.image, size: 24);
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const Icon(Icons.image,
+                                            size: 24);
                                       },
                                     )
                                   : const Icon(Icons.image, size: 24),
                             ),
                             const SizedBox(width: 12),
-                            
+
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -381,7 +388,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 ],
                               ),
                             ),
-                            
+
                             Text(
                               currencyFormat.format(item.totalPrice),
                               style: const TextStyle(
@@ -395,12 +402,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   },
                 ),
               ),
-              
+
               // Total
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
